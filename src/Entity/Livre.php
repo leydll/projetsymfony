@@ -20,13 +20,13 @@ class Livre
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $datePublication = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $disponible = null;
+    #[ORM\Column(type: "boolean")]
+    private bool $disponible = true;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?auteur $livre_id = null;
+    private ?auteur $auteur = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     private ?categorie $categorie_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'utilisateur_id')]
