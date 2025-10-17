@@ -27,9 +27,16 @@ class Utilisateur
     #[ORM\OneToMany(targetEntity: livre::class, mappedBy: 'emprunt_id')]
     private Collection $utilisateur_id;
 
+    /**
+     * @var Collection<int, Emprunt>
+     */
+    #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'utilisateur_id')]
+    private Collection $emprunts;
+
     public function __construct()
     {
         $this->utilisateur_id = new ArrayCollection();
+        $this->emprunts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,6 +92,36 @@ class Utilisateur
             // set the owning side to null (unless already changed)
             if ($utilisateurId->getEmpruntId() === $this) {
                 $utilisateurId->setEmpruntId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunts(): Collection
+    {
+        return $this->emprunts;
+    }
+
+    public function addEmprunt(Emprunt $emprunt): static
+    {
+        if (!$this->emprunts->contains($emprunt)) {
+            $this->emprunts->add($emprunt);
+            $emprunt->setUtilisateurId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmprunt(Emprunt $emprunt): static
+    {
+        if ($this->emprunts->removeElement($emprunt)) {
+            // set the owning side to null (unless already changed)
+            if ($emprunt->getUtilisateurId() === $this) {
+                $emprunt->setUtilisateurId(null);
             }
         }
 
